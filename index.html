@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Free Percentage Calculator | Fast & Easy Online Tool</title>
+    <meta name="description" content="A free, easy-to-use online percentage calculator for all your needs. Quickly calculate percentage of a number, what percent, and percentage increase or decrease.">
+    <link rel="canonical" href="https://www.yourwebsite.com/percentage-calculator">
+
+    <!-- Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Typography Plugin for 'prose' styling -->
+    <script src="https://cdn.tailwindcss.com/3.4.4?plugins=typography"></script>
+
+
+    <!-- Apple-like Color Scheme & Custom Styles -->
+    <style>
+        /* * 使用 :root 定义全局颜色变量，模拟苹果的设计系统。
+         * 这使得颜色管理更加方便，并保持了代码的整洁。
+        */
+        :root {
+            --apple-blue: #007AFF;
+            --apple-blue-hover: #0056b3;
+            --apple-light-gray: #f2f2f7;
+            --apple-card-bg: #ffffff;
+            --apple-text-primary: #1d1d1f;
+            --apple-text-secondary: #6e6e73;
+            --apple-border-color: #d1d1d6;
+        }
+
+        /* * 应用基础样式到 body，包括背景色、文字颜色和字体。
+         * 字体栈优先使用苹果系统字体，以提供原生般的体验。
+        */
+        body {
+            background-color: var(--apple-light-gray);
+            color: var(--apple-text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        /* 卡片样式：背景、圆角和细微的阴影 */
+        .apple-card {
+            background-color: var(--apple-card-bg);
+            border-radius: 1rem; /* 16px */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        /* 输入框样式：边框和过渡效果 */
+        .apple-input {
+            border: 1px solid var(--apple-border-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        /* 输入框聚焦时的样式：蓝色边框和外发光效果，提升可访问性 */
+        .apple-input:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+            outline: none;
+        }
+        /* 按钮样式：标志性的苹果蓝和悬停效果 */
+        .apple-button {
+            background-color: var(--apple-blue);
+            color: white;
+            transition: background-color 0.2s;
+            height: 42px; /* 固定高度以与结果框对齐 */
+        }
+        .apple-button:hover {
+            background-color: var(--apple-blue-hover);
+        }
+    </style>
+
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Site Brand -->
+                <a href="#" class="text-xl font-bold text-slate-800">
+                    % Calculator
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-slate-600 hover:text-blue-600 transition-colors">Calculator</a>
+                    <a href="#" class="text-slate-600 hover:text-blue-600 transition-colors">Blog</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-slate-600 hover:text-blue-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#" class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100">Calculator</a>
+            <a href="#" class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100">Blog</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 md:py-12 flex-grow">
+        
+        <!-- Header: 包含H1主标题和副标题 -->
+        <header class="text-center mb-10 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Percentage Calculator</h1>
+            <p class="text-lg text-slate-600">A free online tool to calculate percentages instantly.</p>
+        </header>
+
+        <!-- Main Content: 计算器主体部分 -->
+        <main class="max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 gap-8">
+
+                <!-- 计算器 1: What is % of X? -->
+                <section id="calc1" class="apple-card p-6 md:p-8">
+                    <h2 class="text-xl font-semibold mb-5 text-slate-800">Find a Percentage of a Number</h2>
+                    <div class="flex flex-col gap-4">
+                        <!-- Input group -->
+                        <div class="flex items-center gap-2 flex-wrap justify-center md:justify-start text-lg">
+                            <span>What is</span>
+                            <input id="p1_percent" type="number" placeholder="percent" class="apple-input w-28 md:w-32 text-center p-2 rounded-lg">
+                            <span>% of</span>
+                            <input id="p1_number" type="number" placeholder="number" class="apple-input w-28 md:w-32 text-center p-2 rounded-lg">
+                            <span>?</span>
+                        </div>
+                        <!-- Button & Result group -->
+                        <div class="flex flex-row items-center gap-3 justify-center md:justify-start md:ml-5">
+                           <button id="btn1" class="apple-button font-bold py-2 px-6 rounded-lg w-36">Calculate</button>
+                           <div class="border border-slate-300 bg-slate-50 w-36 h-[42px] flex items-center justify-center rounded-lg">
+                               <span id="p1_result" class="text-lg font-bold text-slate-900"></span>
+                           </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 计算器 2: X is what % of Y? -->
+                <section id="calc2" class="apple-card p-6 md:p-8">
+                    <h2 class="text-xl font-semibold mb-5 text-slate-800">Find the Ratio as a Percentage</h2>
+                    <div class="flex flex-col gap-4">
+                        <!-- Input group -->
+                        <div class="flex items-center gap-2 flex-wrap justify-center md:justify-start text-lg">
+                            <input id="p2_part" type="number" placeholder="number" class="apple-input w-28 md:w-32 text-center p-2 rounded-lg">
+                            <span>is what percent of</span>
+                            <input id="p2_whole" type="number" placeholder="total" class="apple-input w-28 md:w-32 text-center p-2 rounded-lg">
+                            <span>?</span>
+                        </div>
+                        <!-- Button & Result group -->
+                        <div class="flex flex-row items-center gap-3 justify-center md:justify-start md:ml-5">
+                           <button id="btn2" class="apple-button font-bold py-2 px-6 rounded-lg w-36">Calculate</button>
+                           <div class="border border-slate-300 bg-slate-50 w-36 h-[42px] flex items-center justify-center rounded-lg">
+                               <span id="p2_result" class="text-lg font-bold text-slate-900"></span>
+                           </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 计算器 3: Percentage Increase/Decrease -->
+                <section id="calc3" class="apple-card p-6 md:p-8">
+                    <h2 class="text-xl font-semibold mb-5 text-slate-800">Calculate Percentage Change</h2>
+                    <div class="flex flex-col gap-4">
+                        <!-- Input group -->
+                        <div class="flex items-center gap-2 flex-wrap justify-center md:justify-start text-lg">
+                           <span>From</span>
+                           <input id="p3_old" type="number" placeholder="initial value" class="apple-input w-32 md:w-36 text-center p-2 rounded-lg">
+                           <span>to</span>
+                           <input id="p3_new" type="number" placeholder="new value" class="apple-input w-32 md:w-36 text-center p-2 rounded-lg">
+                           <span>?</span>
+                        </div>
+                        <!-- Button & Result group -->
+                        <div class="flex flex-row items-center gap-3 justify-center md:justify-start md:ml-5">
+                           <button id="btn3" class="apple-button font-bold py-2 px-6 rounded-lg w-36">Calculate</button>
+                           <div class="border border-slate-300 bg-slate-50 w-36 h-[42px] flex items-center justify-center rounded-lg">
+                               <span id="p3_result" class="text-lg font-bold text-slate-900"></span>
+                           </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+            
+            <div class="text-center mt-8 text-sm text-slate-500">
+                <p>Tips: Use the Tab key to move to the next field. Press Enter to calculate.</p>
+            </div>
+        </main>
+
+        <!-- About & FAQ Section -->
+        <section class="max-w-4xl mx-auto mt-12 md:mt-16">
+            <div class="apple-card p-6 md:p-8 prose max-w-none prose-slate">
+                <h2>About</h2>
+                <p>This website is designed to help you quickly and easily calculate percentages for a variety of purposes. Whether you're calculating discounts, calculating tips, or trying to figure out how much something has increased or decreased in value, our percentage calculator can help.</p>
+                
+                <h2>FAQ</h2>
+                
+                <h3>What is a percentage?</h3>
+                <p>Percentage is a way of expressing a number as a fraction of 100. It is commonly used to represent a portion of a whole or to compare two numbers. Percentages are often denoted with the symbol "%". For example, if there are 100 cars in a garage and 25 of them are white, we could say that 25% of the cars in the garage are white.</p>
+                
+                <h2>How do you calculate a percentage?</h2>
+                <p>To calculate a percentage, you typically divide the part (the smaller value) by the whole (the larger value), and then multiply the result by 100. This gives you the percentage value as a number between 0 and 100. For example, if you have 50 apples and you want to know what percentage of them are red, and 20 of them are red, you would divide 20 by 50 to get 0.4, then multiply by 100 to get 40%.</p>
+                
+                <h2>Why percentages matter?</h2>
+                <p>Percentages are used in a wide variety of contexts, from calculating discounts and taxes to measuring changes in stock prices and economic indicators. Understanding how percentages work can help you make more informed decisions in a variety of areas, from personal finance to business management.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer: 包含版权信息和动态年份 -->
+    <footer class="text-center py-6 text-sm text-slate-500">
+        &copy; <span id="year"></span> Percentage Calculator. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- Calculator 1: Percentage Of ---
+            const p1_percent = document.getElementById('p1_percent');
+            const p1_number = document.getElementById('p1_number');
+            const p1_result = document.getElementById('p1_result');
+            
+            function calculatePercentOf() {
+                const percent = parseFloat(p1_percent.value);
+                const number = parseFloat(p1_number.value);
+                if (isNaN(percent) || isNaN(number)) {
+                    p1_result.textContent = '';
+                    return;
+                }
+                const result = (percent / 100) * number;
+                p1_result.textContent = result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            // --- Calculator 2: What Percent ---
+            const p2_part = document.getElementById('p2_part');
+            const p2_whole = document.getElementById('p2_whole');
+            const p2_result = document.getElementById('p2_result');
+
+            function calculateWhatPercent() {
+                const part = parseFloat(p2_part.value);
+                const whole = parseFloat(p2_whole.value);
+                if (isNaN(part) || isNaN(whole) || whole === 0) {
+                    p2_result.textContent = '';
+                    return;
+                }
+                const result = (part / whole) * 100;
+                p2_result.textContent = result.toFixed(2) + '%';
+            }
+
+            // --- Calculator 3: Percentage Change ---
+            const p3_old = document.getElementById('p3_old');
+            const p3_new = document.getElementById('p3_new');
+            const p3_result = document.getElementById('p3_result');
+
+            function calculateChangePercent() {
+                const oldV = parseFloat(p3_old.value);
+                const newV = parseFloat(p3_new.value);
+                if (isNaN(oldV) || isNaN(newV) || oldV === 0) {
+                    p3_result.textContent = '';
+                    p3_result.style.color = 'var(--apple-text-primary)'; // 重置颜色
+                    return;
+                }
+                const result = ((newV - oldV) / oldV) * 100;
+                
+                p3_result.style.color = 'var(--apple-text-primary)'; // 先重置为默认颜色
+                p3_result.textContent = result.toFixed(2) + '%';
+
+                if (result > 0) {
+                    p3_result.textContent = '+' + p3_result.textContent;
+                    p3_result.style.color = '#34D399'; // Green-400
+                } else if (result < 0) {
+                    p3_result.style.color = '#EF4444'; // Red-500
+                }
+            }
+
+            // --- Event Listeners ---
+            document.getElementById('btn1').addEventListener('click', calculatePercentOf);
+            document.getElementById('btn2').addEventListener('click', calculateWhatPercent);
+            document.getElementById('btn3').addEventListener('click', calculateChangePercent);
+
+            // 增加键盘支持：在任何计算器区域内按 Enter 键即可触发计算，并阻止默认的表单提交行为
+            document.getElementById('calc1').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); calculatePercentOf(); } });
+            document.getElementById('calc2').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); calculateWhatPercent(); } });
+            document.getElementById('calc3').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); calculateChangePercent(); } });
+        });
+    </script>
+
+</body>
+</html>
