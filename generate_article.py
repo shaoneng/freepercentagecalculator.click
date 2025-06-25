@@ -57,7 +57,7 @@ def generate_content_with_gemini(topic):
     Generates a blog article (title, description, body) using the Gemini API.
     """
     print(f"Generating article for topic: {topic}...")
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-2.5-pro')
 
     prompt = f"""
     You are an SEO content writer for a website called "Free Percentage Calculator".
