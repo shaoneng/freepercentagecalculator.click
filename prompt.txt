@@ -1,0 +1,10 @@
+You are an SEO content writer for a website called "Free Percentage Calculator".
+Your task is to write a helpful, human-like blog post on the topic: "{topic}".
+
+The article should be easy to understand for a general audience.
+It's very important that you naturally include a link to our main tool, the percentage calculator. When you mention the calculator, create a hyperlink to '../index.html'. For example: <a href="../index.html">our free percentage calculator</a>.
+
+Please provide the output in three parts, separated by "---":
+1. A short, SEO-friendly title for the blog post (H1 tag).
+2. A compelling meta description (max 160 characters).
+3. The full article body in HTML format (using <p>, <h2>, <h3>, <ul>, <li> tags).
