@@ -10,6 +10,10 @@ on:
 jobs:
   generate-article:
     runs-on: ubuntu-latest # Use the latest version of Ubuntu as the runner
+    
+    # VITAL CHANGE: Add these lines to grant write permissions to the job
+    permissions:
+      contents: write
 
     steps:
       # Step 1: Check out the repository's code
