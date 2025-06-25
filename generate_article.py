@@ -79,7 +79,7 @@ def generate_content_with_gemini(topic, prompt_template):
     Generates a blog article (title, description, body) using the Gemini API.
     """
     print(f"Generating article for topic: {topic}...")
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-2.5-pro')
 
     # MODIFIED: Dynamically insert the topic into the prompt template
     final_prompt = prompt_template.format(topic=topic)
