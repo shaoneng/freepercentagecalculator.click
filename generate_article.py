@@ -2,18 +2,24 @@ import os
 import google.generativeai as genai
 from bs4 import BeautifulSoup
 from datetime import datetime
-import random # Import the random module
+import random
 
 # --- CONFIGURATION ---
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+# The script now gets the API key from a GitHub Secret (environment variable)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 BLOG_DIR = "blog"
 BLOG_LIST_PATH = os.path.join(BLOG_DIR, "blog.html")
-# New configuration for the topics file
 TOPICS_FILE_PATH = "topics.txt"
+# New configuration for the prompt file
+PROMPT_FILE_PATH = "prompt.txt"
 # --- END CONFIGURATION ---
 
 def configure_gemini():
     """Configures the Gemini API with the provided key."""
+    if not GEMINI_API_KEY:
+        print("Error: GEMINI_API_KEY environment variable not found.")
+        exit()
     try:
         genai.configure(api_key=GEMINI_API_KEY)
     except Exception as e:
@@ -33,13 +39,11 @@ def get_next_post_number():
         print(f"Error reading blog directory: {e}")
         exit()
 
-# NEW FUNCTION to load topics from the text file
 def load_topics_from_file(file_path):
     """Loads a list of topics from a given text file."""
     print(f"Loading topics from {file_path}...")
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            # Read all lines, strip whitespace/empty lines, and return as a list
             topics = [line.strip() for line in f if line.strip()]
         if not topics:
             print(f"Warning: {file_path} is empty or contains no valid topics.")
@@ -52,28 +56,36 @@ def load_topics_from_file(file_path):
         print(f"Error reading topics file: {e}")
         return []
 
-def generate_content_with_gemini(topic):
+# NEW FUNCTION to load the prompt from a text file
+def load_prompt_from_file(file_path):
+    """Loads the prompt template from a given text file."""
+    print(f"Loading prompt from {file_path}...")
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            prompt = f.read()
+        if not prompt:
+            print(f"Error: Prompt file '{file_path}' is empty.")
+            return None
+        return prompt
+    except FileNotFoundError:
+        print(f"Error: Prompt file not found at '{file_path}'. Please create it.")
+        return None
+    except Exception as e:
+        print(f"Error reading prompt file: {e}")
+        return None
+
+def generate_content_with_gemini(topic, prompt_template):
     """
     Generates a blog article (title, description, body) using the Gemini API.
     """
     print(f"Generating article for topic: {topic}...")
-    model = genai.GenerativeModel('gemini-2.5-pro')
+    model = genai.GenerativeModel('gemini-pro')
 
-    prompt = f"""
-    You are an SEO content writer for a website called "Free Percentage Calculator".
-    Your task is to write a helpful, human-like blog post on the topic: "{topic}".
-
-    The article should be easy to understand for a general audience.
-    It's very important that you naturally include a link to our main tool, the percentage calculator. When you mention the calculator, create a hyperlink to '../index.html'. For example: <a href="../index.html">our free percentage calculator</a>.
-
-    Please provide the output in three parts, separated by "---":
-    1. A short, SEO-friendly title for the blog post (H1 tag).
-    2. A compelling meta description (max 160 characters).
-    3. The full article body in HTML format (using <p>, <h2>, <h3>, <ul>, <li> tags).
-    """
+    # MODIFIED: Dynamically insert the topic into the prompt template
+    final_prompt = prompt_template.format(topic=topic)
 
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(final_prompt)
         cleaned_text = response.text.replace('```html', '').replace('```', '').strip()
         parts = cleaned_text.split('---', 2)
         if len(parts) == 3:
@@ -197,23 +209,24 @@ def update_blog_list(post_number, content):
 
 def main():
     """Main function to run the script."""
-    if GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
-        print("Please replace 'YOUR_GEMINI_API_KEY' with your actual API key.")
-        return
-
     configure_gemini()
     post_number = get_next_post_number()
 
-    # MODIFIED LOGIC to load topics and choose one
+    # Load the prompt template from the file
+    prompt_template = load_prompt_from_file(PROMPT_FILE_PATH)
+    if not prompt_template:
+        print("No prompt template found. Exiting.")
+        return
+
     topics = load_topics_from_file(TOPICS_FILE_PATH)
     if not topics:
         print("No topics found. Exiting.")
         return
     
-    # Choose a topic randomly to avoid repetition
     topic = random.choice(topics)
 
-    content = generate_content_with_gemini(topic)
+    # Pass the prompt template to the generation function
+    content = generate_content_with_gemini(topic, prompt_template)
 
     if content:
         create_new_blog_post_file(post_number, content)
